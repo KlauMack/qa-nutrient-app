@@ -1,0 +1,28 @@
+{
+  "mutate": [
+    "tracker/static/js/**/*.js",
+    "!tracker/static/js/**/__tests__/**",
+    "!tracker/static/js/**/vendor/**"
+  ],
+  "mutator": "javascript",
+  "packageManager": "npm",
+  "reporters": ["clear-text", "progress", "html", "json"],
+  "testRunner": "jest",
+  "jest": {
+    "projectType": "custom",
+    "config": {
+      "testEnvironment": "@stryker-mutator/jest-runner/jest-env/jsdom",
+      "testEnvironmentOptions": {},
+      "testMatch": ["**/tracker/static/js/**/__tests__/**/*.test.js", "**/tracker/static/js/**/tests/**/*.test.js"]
+    }
+  },
+  "coverageAnalysis": "perTest",
+  "timeoutMS": 10000,
+  "concurrency": 4,
+  "thresholds": {
+    "high": 85,
+    "low": 65,
+    "break": 50
+  },
+  "logLevel": "debug"
+}

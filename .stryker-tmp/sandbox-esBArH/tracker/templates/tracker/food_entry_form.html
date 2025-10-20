@@ -1,0 +1,98 @@
+<div id="food-form-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+    <div class="bg-gray-800 p-6 rounded-2xl max-w-md w-full shadow-lg">
+      <h3 class="text-green-400 text-xl font-semibold mb-4 text-center">Add Food</h3>
+  
+      <form method="post" class="space-y-4" id="food-entry-form">
+        {% csrf_token %}
+
+        {{ food_form.as_p }}
+  
+        <!-- Name -->
+        <!-- <div class="flex items-center space-x-2 w-full">
+          <label for="{{ food_form.name.id_for_label }}" class="w-24 text-gray-300 font-semibold">Food Name</label>
+          {{ food_form.name }}
+        </div> -->
+
+        <!-- Category-->
+        <!-- <div class="flex items-center space-x-2 justify-between">
+            <label for="{{ food_form.category.id_for_label }}" class="w-24 text-gray-300 font-semibold">Category</label>
+            {{ food_form.category }}
+        </div> -->
+  
+        <!-- Calories -->
+        <!-- <div class="flex items-center space-x-2 justify-between">
+            <label for="{{ food_form.calories.id_for_label }}" class="w-24 text-gray-300 font-semibold">Calories</label>
+            <div class="flex items-center space-x-6 justify-between">
+                {{ food_form.calories }} kcal
+                <span class="text-green-400 font-semibold" id="calories-progress">0%</span>
+            </div>
+        </div> -->
+  
+        <!-- Protein -->
+        <!-- <div class="flex items-center space-x-2 justify-between">
+            <label for="{{ food_form.protein.id_for_label }}" class="w-24 text-gray-300 font-semibold">Protein</label>
+            <div class="flex items-center space-x-6 justify-between">
+                {{ food_form.protein }} g
+                <span class="text-green-400 font-semibold" id="protein-progress">0%</span>
+            </div>
+        </div> -->
+  
+        <!-- Carbs -->
+        <!-- <div class="flex items-center space-x-2 justify-between">
+            <label for="{{ food_form.carbs.id_for_label }}" class="w-24 text-gray-300 font-semibold">Carbs</label>
+            <div class="flex items-center space-x-6 justify-between">
+                {{ food_form.carbs }} g
+                <span class="text-green-400 font-semibold" id="carbs-progress">0%</span>
+            </div>
+        </div> -->
+  
+        <!-- Fat -->
+        <!-- <div class="flex items-center space-x-2 justify-between">
+            <label for="{{ food_form.fat.id_for_label }}" class="w-24 text-gray-300 font-semibold">Fat</label>
+            <div class="flex items-center space-x-6 justify-between">
+                {{ food_form.fat }} g
+                <span class="text-green-400 font-semibold" id="fat-progress">0%</span>
+            </div>
+        </div> -->
+  
+        <div class="flex justify-end space-x-2 mt-4">
+          <button type="button" id="cancel-food-btn" class="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-gray-200">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-green-400 hover:bg-green-500 text-gray-900">Add</button>
+        </div>
+      </form>
+    </div>
+</div>
+
+<script>
+// @ts-nocheck
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const addModal = document.getElementById('food-form-modal');
+      const addForm = document.getElementById('food-entry-form');
+      const addButtons = document.querySelectorAll('.add-food-btn');
+      const addCancelBtn = document.getElementById('cancel-food-btn');
+      const categoryInput = document.getElementById('id_category');
+    
+      // Open modal
+      addButtons.forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          addForm.reset(); // clear previous values
+    
+          // Auto-fill category from button dataset
+          const section = btn.dataset.category;
+          if (categoryInput) {
+            categoryInput.value = section || '';
+          }
+    
+          addModal.classList.remove('hidden');
+        });
+      });
+    
+      // Cancel modal
+      addCancelBtn.addEventListener('click', () => {
+        addModal.classList.add('hidden');
+      });
+    });
+
+</script>

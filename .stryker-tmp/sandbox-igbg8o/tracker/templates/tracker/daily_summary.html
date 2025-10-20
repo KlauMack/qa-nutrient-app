@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Summary{% endblock %}
+
+{% block content %}
+    <h2 class="text-2xl font-semibold mb-6 text-center text-green-400">Your Summary</h2>
+
+    <!-- Nutrient progress bars -->
+    <div class="max-w-4xl mx-auto px-4 mb-8">
+        <div class="bg-gray-800 rounded-2xl shadow-lg p-6 space-y-6">
+            <h2 class="text-xl font-semibold text-green-400 mb-4 text-center">Daily Nutrient Targets</h2>
+            {% include "tracker/nutrient_progress_bar.html" with label="Energy" consumed=consumed_total.calories_total target=targets.calories_target progress=calories_progress unit="kcal" color="bg-yellow-400" %}
+            {% include "tracker/nutrient_progress_bar.html" with label="Protein" consumed=consumed_total.protein_total target=targets.protein_target progress=protein_progress unit="g" color="bg-blue-400" %}
+            {% include "tracker/nutrient_progress_bar.html" with label="Carbs" consumed=consumed_total.carbs_total target=targets.carbs_target progress=carbs_progress unit="g" color="bg-purple-400" %}
+            {% include "tracker/nutrient_progress_bar.html" with label="Fat" consumed=consumed_total.fat_total target=targets.fat_target progress=fat_progress unit="g" color="bg-red-400" %}
+        </div>
+    </div>
+
+    <!-- Food Sections -->
+    {% for category, foods in foods_by_category.items %}
+        {% include "tracker/food_section.html" with section_name=category|capfirst foods=foods %}
+    {% endfor %}
+
+    <!-- Food Entry Modal -->
+    {% include "tracker/food_entry_form.html" %}
+
+    <!-- Food Edit Modal -->
+    {% include "tracker/food_edit_modal.html" %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+// @ts-nocheck
+
+  // Collapse sections
+  document.querySelectorAll('.food-section-content').forEach(content => {
+    if (content.children.length === 0) {
+      content.style.maxHeight = '0px';
+    } else {
+      content.style.maxHeight = content.scrollHeight + 'px';
+    }
+  });
+
+  document.querySelectorAll('.food-section-toggle').forEach(header => {
+    header.addEventListener('click', () => {
+      const content = header.nextElementSibling;
+      const chevron = header.querySelector('.chevron-icon');
+      chevron.classList.toggle('rotate-180');
+      if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+        content.style.maxHeight = '0px';
+      } else {
+        content.style.maxHeight = content.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // Add food modal
+  const addModal = document.getElementById('food-entry-modal');
+  const addButtons = document.querySelectorAll('.add-food-btn');
+  const addCancelBtn = document.getElementById('cancel-food-btn');
+  const addForm = document.getElementById('food-entry-form');
+
+  addButtons.forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      addForm.reset();
+      addModal.classList.remove('hidden');
+    });
+  });
+
+  addCancelBtn.addEventListener('click', () => {
+    addModal.classList.add('hidden');
+  });
+
+  // Edit food modal
+  document.querySelectorAll('.food-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const editModal = document.getElementById('food-edit-modal');
+      const editForm = document.getElementById('food-edit-form');
+
+      editModal.classList.remove('hidden');
+      editForm.querySelector('[name="food_id"]').value = item.dataset.id;
+      editForm.querySelector('[name="name"]').value = item.dataset.name;
+      editForm.querySelector('[name="calories"]').value = item.dataset.calories;
+      editForm.querySelector('[name="protein"]').value = item.dataset.protein;
+      editForm.querySelector('[name="carbs"]').value = item.dataset.carbs;
+      editForm.querySelector('[name="fat"]').value = item.dataset.fat;
+    });
+  });
+
+  document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+    document.getElementById('food-edit-modal').classList.add('hidden');
+  });
+
+</script>
+{% endblock %}

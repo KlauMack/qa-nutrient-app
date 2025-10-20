@@ -1,0 +1,76 @@
+<div class="max-w-4xl mx-auto px-4 mb-6">
+  <div class="bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+    <!-- Header -->
+    <div class="w-full flex justify-between items-center
+                bg-gray-700/90 hover:bg-gray-600 transition-colors duration-300
+                rounded-2xl cursor-pointer food-section-toggle px-6 py-4">
+      <div class="flex items-center space-x-2">
+        <!-- Add button -->
+        <button type="button" class="text-green-400 hover:text-green-300 focus:outline-none add-food-btn" data-category="{{ section_name|lower }}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+        </button>
+        <!-- Section label -->
+        <span class="text-green-400 font-semibold">{{ section_name }}</span>
+      </div>
+
+      <!-- Right: Chevron -->
+      <svg class="h-6 w-6 text-green-400 transition-transform duration-300 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </div>
+
+    <!-- Collapsible content -->
+    <div class="overflow-hidden transition-all duration-500 ease-in-out food-section-content"
+      style="max-height: 0px; padding: 0;">
+
+      {% for food in foods %}
+        <div class="food-item bg-transparent rounded-lg p-2 flex justify-between items-center text-gray-100
+                    hover:bg-gray-600 cursor-pointer transition-colors duration-200"
+          data-id="{{ food.id }}"
+          data-name="{{ food.name }}"
+          data-calories="{{ food.calories }}"
+          data-protein="{{ food.protein }}"
+          data-carbs="{{ food.carbs }}"
+          data-fat="{{ food.fat }}"> 
+          <!-- Apple icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19.5 7.5c-.7-1.2-1.8-2-3-2.5-1.1-.5-2.3-.5-3.5 0-1.2.5-2.3 1.3-3 2.5-1.3 2.3-.8 5.5 1.5 7.3 1.1 1 2.5 1.5 3.9 1.5 1.4 0 2.8-.5 3.9-1.5 2.3-1.8 2.8-5 1.5-7.3zM12 3c0 1-.8 2-2 2s-2-1-2-2 1.3-2 2-2 2 1 2 2z"/>
+          </svg>
+          <span class="flex-1 px-2">{{ food.name }}</span>
+          <span>{{ food.calories|floatformat:1 }} kcal</span>
+        </div>
+        {% if not forloop.last %}
+          <div class="h-px bg-gray-600 w-full"></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+// @ts-nocheck
+
+  document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.food-section-content').forEach(content => {
+          content.style.maxHeight = content.children.length === 0 ? '0px' : content.scrollHeight + 'px';
+      });
+
+      document.querySelectorAll('.food-section-toggle').forEach(header => {
+          header.addEventListener('click', () => {
+              const content = header.nextElementSibling;
+              const chevron = header.querySelector('.chevron-icon');
+
+              chevron.classList.toggle('rotate-180');
+
+              if(content.style.maxHeight && content.style.maxHeight !== '0px'){
+                  content.style.maxHeight = '0px';
+              } else {
+                  content.style.maxHeight = content.scrollHeight + 'px';
+              }
+          });
+      });
+  });
+
+</script>
