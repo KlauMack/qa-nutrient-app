@@ -1,4 +1,3 @@
-# qa-nutrient-app
 # Nutrient Application
 
 A web application built with the Django framework. Tracks food nutrients and user set targets.
